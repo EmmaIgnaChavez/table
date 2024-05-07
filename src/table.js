@@ -162,6 +162,21 @@ export default class Table {
    *
    * @returns {Toolbox}
    */
+
+  createDropdown(items) {
+    const select = document.createElement("select");
+    select.className = "dropdown-menu";
+  
+    items.forEach(item => {
+      const option = document.createElement("option");
+      option.value = item.value;
+      option.text = item.label;
+      select.appendChild(option);
+    });
+  
+    return select;
+  }
+
   createColumnToolbox() {
     return new Toolbox({
       api: this.api,
@@ -192,6 +207,22 @@ export default class Table {
           confirmationRequired: true,
           onClick: () => {
             this.deleteColumn(this.selectedColumn);
+            this.hideToolboxes();
+          }
+        },
+        {
+          label: this.api.i18n.t('Dropdown Options'),
+          icon: IconPlus, // Replace with an appropriate icon
+          onClick: () => {
+            const dropdown = this.createDropdown([
+              { value: 'option1', label: 'Option 1' },
+              { value: 'option2', label: 'Option 2' },
+              { value: 'option3', label: 'Option 3' }
+            ]);
+  
+            // Append the dropdown to the currently selected row's cell
+            const cell = this.getCell(this.selectedRow, 1);
+            cell.appendChild(dropdown);
             this.hideToolboxes();
           }
         }
